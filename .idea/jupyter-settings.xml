@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JupyterPersistentConnectionParameters">
+    <option name="moduleParameters">
+      <map>
+        <entry key="$USER_HOME$/Yandex.Disk.localized/Internal pavzagor tools/Alfred.alfredpreferences/workflows/user.workflow.2F0BA13F-F48C-45FB-A332-A7E9FBB196DB/.idea/user.workflow.7FF93F4E-CFF6-47AA-945B-C80E4755147C.iml">
+          <value>
+            <JupyterConnectionParameters>
+              <option name="managed" value="true" />
+              <option name="sdkHomePath" value="/usr/local/bin/python3.9" />
+            </JupyterConnectionParameters>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Yandex.Disk.localized/Kodland/Python notebooks/.idea/Python notebooks.iml">
+          <value>
+            <JupyterConnectionParameters>
+              <option name="managed" value="true" />
+              <option name="sdkHomePath" value="/usr/local/bin/python3.9" />
+            </JupyterConnectionParameters>
+          </value>
+        </entry>
+        <entry key="/private/var/folders/rr/jl1vc_s11rnb1y801kn8_mpr0000gn/T/Parse data from pact messenger aggregrator.ipynb/.idea/Parse data from pact messenger aggregrator.ipynb.iml">
+          <value>
+            <JupyterConnectionParameters>
+              <option name="managed" value="true" />
+              <option name="sdkHomePath" value="/usr/local/bin/python3.9" />
+            </JupyterConnectionParameters>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
