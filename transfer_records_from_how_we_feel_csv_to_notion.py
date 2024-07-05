@@ -4,7 +4,7 @@ import notion_client
 from dotenv import load_dotenv
 import os
 from anthropic import Anthropic
-from datetime import datetime
+from datetime import datetime, timezone
 
 load_dotenv()
 
@@ -69,7 +69,7 @@ def fahrenheit_to_celsius(fahrenheit):
 # Function to convert date to ISO 8601 format
 def convert_to_iso8601(date_str):
     try:
-        return datetime.strptime(date_str, "%Y %a %b %d %I:%M %p").isoformat()
+        return datetime.strptime(date_str, "%Y %a %b %d %I:%M %p").replace(tzinfo=timezone.utc).isoformat()
     except ValueError:
         return None
 
@@ -95,6 +95,27 @@ Data: {record}
         ]
     )
     return response.content[0].text.strip()
+
+
+# Function to fetch all records from the Notion database
+def fetch_all_notion_records(database_id):
+    results = []
+    next_cursor = None
+
+    while True:
+        response = notion.databases.query(
+            **{
+                "database_id": database_id,
+                "page_size": 100,
+                "start_cursor": next_cursor,
+            }
+        )
+        results.extend(response['results'])
+        next_cursor = response.get('next_cursor')
+        if not next_cursor:
+            break
+
+    return results
 
 
 # Function to add a record to Notion
@@ -148,6 +169,18 @@ def add_record_to_notion(record, name):
     )
 
 
+# Retrieve existing records from Notion database
+notion_records = fetch_all_notion_records(database_id)
+
+# Extract unique datetimes from Notion records
+notion_dates = set()
+for record in notion_records:
+    date_property = record['properties'].get('Date and time', { })
+    date = date_property.get('date', { }).get('start')
+    if date:
+        standardized_date = datetime.fromisoformat(date).replace(tzinfo=timezone.utc).isoformat()
+        notion_dates.add(standardized_date)
+
 # Process and add records to Notion
 for i, record in enumerate(records):
     if i >= 1000:
@@ -155,13 +188,17 @@ for i, record in enumerate(records):
 
     # Extract and transform data
     date = convert_to_iso8601(record['Date'])
+    if date in notion_dates:
+        print(f"Date {date} is already in Notion database, skipping...")
+        continue  # Skip records with dates already in Notion
+
     mood = record['Mood']
     places = record.get('Tags (Places)', None)
     people = record.get('Tags (People)', None)
     events = record.get('Tags (Events)', None)
     exercise = float(record['Exercise']) if pd.notna(record['Exercise']) else None
     sleep = round_sleep_hours(float(record['Sleep'])) if not math.isnan(float(record['Sleep'])) else None
-    steps = round(float(record['Steps']),2) if not math.isnan(float(record['Steps'])) else None
+    steps = round(float(record['Steps']), 2) if not math.isnan(float(record['Steps'])) else None
     meditation = float(record['Meditation']) if not math.isnan(float(record['Meditation'])) else None
     weather = record['Weather'] if pd.notna(record['Weather']) else None
     notes = record['Notes'] if pd.notna(record['Notes']) else None
