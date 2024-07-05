@@ -108,11 +108,11 @@ def add_record_to_notion(record, name):
     # Add fields to the record if they are present in the CSV
     if record['Date']:
         notion_record["Date and time"] = { "date": { "start": record['Date'] } }
-    if record['Places']:
+    if isinstance(record['Places'], str):
         notion_record["Places"] = {
             "multi_select": [{ "name": place } for place in record['Places'].split(';') if place.strip()]
         }
-    if record['People']:
+    if isinstance(record['People'], str):
         notion_record["People"] = {
             "multi_select": [{ "name": person } for person in record['People'].split(';') if person.strip()]
         }
@@ -120,9 +120,9 @@ def add_record_to_notion(record, name):
         notion_record["Events"] = {
             "multi_select": [{ "name": event } for event in record['Events'].split(';') if event.strip()]
         }
-    if record['Notes']:
+    if isinstance(record['Notes'], str):
         notion_record["Notes"] = { "rich_text": [{ "text": { "content": record['Notes'] } }] }
-    if record['Mood']:
+    if isinstance(record['Mood'], str):
         notion_record["Emotions"] = {
             "multi_select": [{ "name": mood } for mood in record['Mood'].split(';') if mood.strip()]
         }
@@ -136,7 +136,7 @@ def add_record_to_notion(record, name):
         notion_record["Steps"] = { "number": record['Steps'] }
     if record['Temperature'] is not None:
         notion_record["Temperature"] = { "number": record['Temperature'] }
-    if record['Weather']:
+    if isinstance(record['Weather'], str):
         notion_record["Weather"] = { "select": { "name": record['Weather'] } }
 
     # Debug print statement
