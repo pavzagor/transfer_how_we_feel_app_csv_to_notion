@@ -12,7 +12,7 @@ load_dotenv()
 ANTHROPIC_KEY = os.getenv("ANTHROPIC_KEY")
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
 NOTION_DATABASE_ID = os.getenv("NOTION_DATABASE_ID")
-CSV_FILE_PATH = "../HowWeFeelEmotions5Jul2024.csv"
+CSV_FILE_PATH = os.getenv("CSV_FILE_PATH")
 
 # Read CSV file
 file_path = CSV_FILE_PATH
