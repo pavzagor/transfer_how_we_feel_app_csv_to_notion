@@ -12,7 +12,7 @@ load_dotenv()
 ANTHROPIC_KEY = os.getenv("ANTHROPIC_KEY")
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
 NOTION_DATABASE_ID = os.getenv("NOTION_DATABASE_ID")
-CSV_FILE_PATH = "../HowWeFeelEmotions 4 Jul 2024.csv"
+CSV_FILE_PATH = "../HowWeFeelEmotions5Jul2024.csv"
 
 # Read CSV file
 file_path = CSV_FILE_PATH
@@ -126,7 +126,7 @@ def add_record_to_notion(record, name):
         notion_record["Sleep hours"] = { "number": record['Sleep'] }
     if record['Meditation'] is not None:
         notion_record["Meditation"] = { "number": record['Meditation'] }
-    if record['Events']:
+    if record['Events'] and record['Events'] is not None:
         notion_record["Events"] = {
             "multi_select": [{ "name": event } for event in record['Events'].split(';') if event.strip()]
         }
@@ -150,7 +150,7 @@ def add_record_to_notion(record, name):
 
 # Process and add records to Notion
 for i, record in enumerate(records):
-    if i >= 10:
+    if i >= 1000:
         break
 
     # Extract and transform data
