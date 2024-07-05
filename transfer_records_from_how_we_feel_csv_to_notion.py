@@ -116,6 +116,10 @@ def add_record_to_notion(record, name):
         notion_record["People"] = {
             "multi_select": [{ "name": person } for person in record['People'].split(';') if person.strip()]
         }
+    if isinstance(record['Events'], str):
+        notion_record["Events"] = {
+            "multi_select": [{ "name": event } for event in record['Events'].split(';') if event.strip()]
+        }
     if record['Notes']:
         notion_record["Notes"] = { "rich_text": [{ "text": { "content": record['Notes'] } }] }
     if record['Mood']:
@@ -126,10 +130,6 @@ def add_record_to_notion(record, name):
         notion_record["Sleep hours"] = { "number": record['Sleep'] }
     if record['Meditation'] is not None:
         notion_record["Meditation"] = { "number": record['Meditation'] }
-    if record['Events'] and record['Events'] is not None:
-        notion_record["Events"] = {
-            "multi_select": [{ "name": event } for event in record['Events'].split(';') if event.strip()]
-        }
     if record['Exercise'] is not None:
         notion_record["Exercise"] = { "number": record['Exercise'] }
     if record['Steps'] is not None:
@@ -156,9 +156,9 @@ for i, record in enumerate(records):
     # Extract and transform data
     date = convert_to_iso8601(record['Date'])
     mood = record['Mood']
-    places = record.get('Tags (Places)', '')  # Extract Places from CSV
-    people = record.get('Tags (People)', '')  # Extract People from CSV
-    events = record.get('Tags (Events)', '')  # Extract Events from CSV
+    places = record.get('Tags (Places)', None)
+    people = record.get('Tags (People)', None)
+    events = record.get('Tags (Events)', None)
     exercise = float(record['Exercise']) if pd.notna(record['Exercise']) else None
     sleep = round_sleep_hours(float(record['Sleep'])) if not math.isnan(float(record['Sleep'])) else None
     steps = round(float(record['Steps']),2) if not math.isnan(float(record['Steps'])) else None
